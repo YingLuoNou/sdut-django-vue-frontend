@@ -15,7 +15,9 @@
         
         <!-- 主体区域 -->
         <el-main>
-          <Login />
+          <!-- 根据登录状态来展示不同的内容 -->
+          <router-view></router-view>
+
         </el-main>
   
         <!-- 底部区域 -->
@@ -30,14 +32,32 @@
   </template>
   
   <script>
-  import LoginPrompt from '@/views/LoginPrompt.vue';
-  import Login from '@/views/Login.vue';
-  export default {
-    components: {
-      LoginPrompt,
-      Login
+ import { onMounted, computed } from 'vue'
+import { useUserStore } from '@/store/user'
+import Login from '@/views/Login.vue'
+import Dashboard from '@/views/Dashboard.vue'
+
+export default {
+  components: {
+    Login,
+    Dashboard
+  },
+  setup() {
+    const userStore = useUserStore()
+
+    // 在组件挂载时初始化用户信息
+    onMounted(async () => {
+      await userStore.initializeUser()
+    })
+
+    // 判断用户是否已登录
+    const isLoggedIn = computed(() => !!userStore.userGroup)
+
+    return {
+      isLoggedIn
     }
   }
+}
 
   </script>
   
