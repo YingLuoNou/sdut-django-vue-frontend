@@ -6,9 +6,8 @@
           <div class="header-content">
             <span class="logo">电气学院请假系统</span>
             <div class="nav-items">
-              <div class="nav-item">学生</div>
-              <div class="nav-item">导员</div>
-              <div class="nav-item">书记</div>
+                <StudentNavbar v-show="isStudent" />
+                <TeacherNavbar v-show="isTeacher" />
             </div>
           </div>
         </el-header>
@@ -16,7 +15,7 @@
         <!-- 主体区域 -->
         <el-main>
           <!-- 根据登录状态来展示不同的内容 -->
-          <router-view></router-view>
+          <router-view />
 
         </el-main>
   
@@ -36,11 +35,14 @@
 import { useUserStore } from '@/store/user'
 import Login from '@/views/Login.vue'
 import Dashboard from '@/views/Dashboard.vue'
-
+import StudentNavbar from '@/views/StudentNavbar.vue'
+import TeacherNavbar from '@/views/TeacherNavbar.vue'
 export default {
   components: {
     Login,
-    Dashboard
+    Dashboard,
+    StudentNavbar,
+    TeacherNavbar
   },
   setup() {
     const userStore = useUserStore()
