@@ -4,7 +4,7 @@
         <!-- 顶部导航栏 -->
         <el-header class="header">
           <div class="header-content">
-            <span class="logo">电气学院请假系统</span>
+            <span class="logo">电气学院请假系统a</span>
             <div class="nav-items">
                 <StudentNavbar v-show="isStudent" />
                 <TeacherNavbar v-show="isTeacher" />
@@ -12,6 +12,20 @@
           </div>
         </el-header>
         
+    <el-container style="height: 100vh">
+    <!-- 左侧侧边栏 -->
+    <el-aside width="200px" style="background-color: #f4f4f4; border-right: 1px solid #ddd;">
+      <el-menu :default-active="activeMenu" class="el-menu-vertical-demo" @select="handleMenuSelect">
+        <el-menu-item index="1">菜单项 1</el-menu-item>
+        <el-menu-item index="2">菜单项 2</el-menu-item>
+        <el-submenu index="3">
+          <template #title>子菜单</template>
+          <el-menu-item index="3-1">子菜单项 1</el-menu-item>
+          <el-menu-item index="3-2">子菜单项 2</el-menu-item>
+        </el-submenu>
+        <el-menu-item index="4">菜单项 4</el-menu-item>
+      </el-menu>
+    </el-aside>
         <!-- 主体区域 -->
         <el-main>
           <!-- 根据登录状态来展示不同的内容 -->

@@ -8,32 +8,29 @@ export const routes = [
     component: () => import("@/views/NotFound.vue"),
   },
   {
-    path: '/',
-    name: 'Home',
-    component: HomeView,
-    children: [
-      {
-        path: 'login',
-        name: 'login',
-        component: () => import('@/views/Login.vue')
-      }
-    ]
+    path: "/askleave",
+    name: "askleave",
+    component: () => import("@/views/askleave.vue"),
   },
   {
-    path: '/teacher',
-    name: 'TeacherHome',
-    components: {
-      default: HomeView, // 主内容区域
-      navbar: () => import('@/views/TeacherNavbar.vue'), // 教师身份的导航栏
-    }
+    path:"/leaveinfo",
+    name:"leaveinfo",
+    component: () => import("@/views/leaveinfo.vue"),
   },
   {
-    path: '/student',
-    name: 'StudentHome',
-    components: {
-      default: HomeView, // 主内容区域
-      navbar: () => import('@/views/StudentNavbar.vue'), // 学生身份的导航栏
-    }
+    path:"/userinfo",
+    name:"userinfo",
+    component: () => import("@/views/userinfo.vue"),
+  },
+  {
+    path:"/tchinfo",
+    name:"tchinfo",
+    component: () => import("@/views/tchinfo.vue"),
+  },
+  {
+    path:"/login",
+    name:"login",
+    component: () => import("@/views/Login.vue"),
   }
 ]
 

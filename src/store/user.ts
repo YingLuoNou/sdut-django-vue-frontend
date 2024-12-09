@@ -63,6 +63,7 @@ export const useUserStore = defineStore('user', () => {
           student_number: response.student_number || null,
           user_group: response.user_group || null
         }
+        // console.log('获取用户信息成功', userInfo.value)
       }
     } catch (error) {
       console.error('获取用户信息失败', error)
