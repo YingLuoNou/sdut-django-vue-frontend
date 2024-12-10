@@ -2,17 +2,19 @@
     <div class="leave-info">
       <el-row>
         <el-col :span="24">
-          <!-- 标题 -->
           <h2>我的请假信息</h2>
+          <!-- 当 leaveRequests 数组不为空时，显示表格 -->
           <el-table
+            v-if="leaveRequests.length > 0"
             :data="leaveRequests"
             border
             style="width: 100%;"
+            :fit="true"
           >
             <el-table-column
               label="请假日期"
-              prop="leaveDate"
-              width="180"
+              :formatter="formatLeaveDate"
+              width="300"
             />
             <el-table-column
               label="请假事由"
@@ -20,39 +22,12 @@
             />
             <el-table-column
               label="状态"
-              prop="status"
+              :formatter="formatStatus"
               width="150"
             />
-            <el-table-column
-              label="操作"
-              width="180"
-            >
-              <template v-slot="scope">
-                <el-button
-                  v-if="scope.row.status === 'Pending'"
-                  type="primary"
-                  size="small"
-                  @click="handleApproval(scope.row)"
-                >
-                  审批
-                </el-button>
-                <el-button
-                  v-if="scope.row.status === 'Approved'"
-                  type="success"
-                  size="small"
-                >
-                  已批准
-                </el-button>
-                <el-button
-                  v-if="scope.row.status === 'Rejected'"
-                  type="danger"
-                  size="small"
-                >
-                  已拒绝
-                </el-button>
-              </template>
-            </el-table-column>
           </el-table>
+          <!-- 如果没有数据，则显示提示 -->
+          <p v-else>没有请假信息</p>
         </el-col>
       </el-row>
     </div>
@@ -63,42 +38,78 @@
   import { useUserStore } from '@/store/user'
   import request from '@/utils/request'
   
+  // 引入 dayjs 及 utc 插件
+  import dayjs from 'dayjs'
+  import utc from 'dayjs/plugin/utc'
+  
+  dayjs.extend(utc)
+  
   export default {
     name: 'LeaveRequestList',
     setup() {
-      // 存储请假信息
       const leaveRequests = ref([])
   
-      // 获取用户信息
       const userStore = useUserStore()
   
-      // 查询用户的请假信息
+      // 使用 dayjs.utc 来确保按UTC格式解析显示
+      const formatDate = (utcStr) => {
+        // 使用 dayjs utc 模式解析传入的时间字符串
+        const date = dayjs.utc(utcStr)
+        // 按照您想要的格式输出，这里保持与您之前的格式一致
+        return date.format('MM月DD日 HH时mm分')
+      }
+  
+      // 格式化日期的函数
+      const formatLeaveDate = (row) => {
+        const startFormatted = formatDate(row.start_date)
+        const endFormatted = formatDate(row.end_date)
+        return `从${startFormatted}到${endFormatted}`
+      }
+  
+      // 格式化状态的函数
+      const formatStatus = (row) => {
+        const status = Number(row.status)
+        switch (status) {
+          case 0:
+            return '待审批'
+          case 1:
+            return '已驳回'
+          case 2:
+            return '已批准'
+          case 3:
+            return '已销假'
+          case 4:
+            return '待审核'
+          case 5:
+            return '已审核'
+          case 6:
+            return '已审核'
+        }
+      }
+  
+      // 请求请假数据的函数
       const fetchLeaveRequests = async () => {
         try {
-          const response = await request.get('/leave-requests', {
+          const response = await request.get('/view-leave/', {
             params: { studentNumber: userStore.userInfo.student_number }
           })
-          leaveRequests.value = response.data || []
+          console.log('请假信息:', response)  
+          // 确保返回的数据是数组类型
+          leaveRequests.value = Array.isArray(response) ? response : []
+          console.log('更新后的请假信息:', leaveRequests.value)
         } catch (error) {
           console.error('获取请假信息失败:', error)
         }
       }
   
-      // 审批操作
-      const handleApproval = (row) => {
-        // 审批操作的逻辑
-        console.log(`审批请假请求:`, row)
-        // 调用 API 进行审批
-      }
-  
-      // 组件挂载后获取请假信息
       onMounted(() => {
         fetchLeaveRequests()
       })
   
       return {
         leaveRequests,
-        handleApproval
+        formatLeaveDate,
+        formatStatus
       }
     }
   }

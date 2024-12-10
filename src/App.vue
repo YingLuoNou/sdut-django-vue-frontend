@@ -11,6 +11,7 @@ const isStu = ref(false);
 const userGroup = computed(() => store.userInfo.user_group);  // userInfo 存储在userStore.userInfo
 // 监听 userGroup 的变化
 watch(userGroup, (newGroup) => {
+  console.log(newGroup)
   isStu.value = newGroup === 'stu';  // 如果用户组为 'stu'，则显示学生导航栏
 });
 
@@ -25,7 +26,8 @@ isStu.value = userGroup.value === 'stu';
         <!-- 顶部导航栏 -->
         <el-header class="header">
           <div class="header-content">
-            <span class="logo">电气学院请假系统</span>
+            <span class="logo">请假(预览版)</span>
+            <!-- <img src="./assets/" alt=""> -->
           </div>
         </el-header>
         <!-- 主体区域 -->
