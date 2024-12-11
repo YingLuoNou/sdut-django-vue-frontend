@@ -28,9 +28,14 @@ export const routes = [
     component: () => import("@/views/tchinfo.vue"),
   },
   {
-    path:"/login",
+    path:"/",
     name:"login",
     component: () => import("@/views/Login.vue"),
+  },
+  {
+    path:"/masinfo",
+    name:"masinfo",
+    component: () => import("@/views/masinfo.vue"),
   }
 ]
 

@@ -43,6 +43,9 @@ export default defineComponent({
           if(userStore.userInfo.user_group == "stu"){
             router.replace({ path: '/userinfo' })
           }
+          else{
+            router.replace({ path: '/tchinfo' })
+          }
           // 只更新 URL，不跳转页面
           // router.replace({ path: '/', query: { loggedIn: 'true' } })
         } else {
