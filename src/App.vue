@@ -8,15 +8,21 @@ import {ref,computed,watch} from "vue"
 
 const store = useUserStore()
 const isStu = ref(false);
+const isTch = ref(false);
+const isMas = ref(false);
 const userGroup = computed(() => store.userInfo.user_group);  // userInfo 存储在userStore.userInfo
 // 监听 userGroup 的变化
 watch(userGroup, (newGroup) => {
   console.log(newGroup)
   isStu.value = newGroup === 'stu';  // 如果用户组为 'stu'，则显示学生导航栏
+  isTch.value = userGroup.value === 'tch';
+  isMas.value = userGroup.value === 'mas';
 });
 
 isStu.value = userGroup.value === 'stu';
-// const isTch = true
+isTch.value = userGroup.value === 'tch';
+isMas.value = userGroup.value === 'mas';
+
 
 </script>
 
@@ -42,10 +48,10 @@ isStu.value = userGroup.value === 'stu';
           <div v-if="isStu">
             <Stu_Navbar />
           </div>
-          <!-- <div v-if="isTch">
+          <div v-if="isTch">
             <Tch_Navbar />
           </div>
-          <div v-if="isMas">Mas</div> -->
+          <!-- <div v-if="isMas">Mas</div> -->
         </el-footer>
       </el-container>
     </div>

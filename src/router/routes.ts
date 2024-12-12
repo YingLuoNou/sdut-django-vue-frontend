@@ -36,6 +36,16 @@ export const routes = [
     path:"/masinfo",
     name:"masinfo",
     component: () => import("@/views/masinfo.vue"),
+  },
+  {
+    path:"/approveleave",
+    name:"approveleave",
+    component: () => import("@/views/approveleave.vue"),
+  },
+  {
+    path:"/leavedetail",
+    name:"leavedetail",
+    component: () => import("@/views/leavedetail.vue"),
   }
 ]
 
