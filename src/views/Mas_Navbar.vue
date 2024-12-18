@@ -4,9 +4,9 @@
       <el-row type="flex" justify="center" align="middle" class="navbar-container">
         <el-col :span="24">
           <el-menu mode="horizontal" class="navbar-menu" active-text-color="#007bff">
-            <el-menu-item index="1"><router-link to="/approveleave">假条批准</router-link></el-menu-item>
+            <el-menu-item index="1"><router-link to="/approveleave_mas">假条批准</router-link></el-menu-item>
             <!-- <el-menu-item index="2"><router-link to="/leaveinfo">所带班级信息</router-link></el-menu-item> -->
-            <el-menu-item index="3"><router-link to="/tchinfo">个人信息</router-link></el-menu-item>
+            <el-menu-item index="3"><router-link to="/tchinfo">信息</router-link></el-menu-item>
             <!-- <el-menu-item index="4">服务</el-menu-item>
             <el-menu-item index="5">联系我们</el-menu-item> -->
           </el-menu>
@@ -17,7 +17,7 @@
   
   <script>
   export default {
-    name: 'Tch_Navbar',
+    name: 'Mas_Navbar',
   };
   </script>
   

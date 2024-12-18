@@ -5,6 +5,7 @@ import Stu_Navbar from "./views/Stu_Navbar.vue";
 import Tch_Navbar from "./views/Tch_Navbar.vue";
 import {useUserStore} from "@/store/user"
 import {ref,computed,watch} from "vue"
+import Mas_Navbar from "./views/Mas_Navbar.vue";
 
 const store = useUserStore()
 const isStu = ref(false);
@@ -51,7 +52,9 @@ isMas.value = userGroup.value === 'mas';
           <div v-if="isTch">
             <Tch_Navbar />
           </div>
-          <!-- <div v-if="isMas">Mas</div> -->
+          <div v-if="isMas">
+            <Mas_Navbar />
+          </div>
         </el-footer>
       </el-container>
     </div>

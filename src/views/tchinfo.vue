@@ -45,29 +45,7 @@
         </el-card>
       </el-tab-pane>
 
-      <!-- 信息勘误选项卡 -->
-      <el-tab-pane label="信息勘误" name="correct-info">
-        <el-card>
-          <h2>信息勘误</h2>
-          <el-form :model="errorForm" label-width="120px">
-            <el-form-item label="姓名">
-              <el-input v-model="errorForm.first_name" placeholder="请输入正确的姓名" />
-            </el-form-item>
-
-            <el-form-item label="邮箱">
-              <el-input v-model="errorForm.email" placeholder="请输入正确的邮箱" />
-            </el-form-item>
-
-            <el-form-item label="联系电话">
-              <el-input v-model="errorForm.phone" placeholder="请输入正确的联系电话" />
-            </el-form-item>
-
-            <el-form-item>
-              <el-button type="primary" @click="correctInfo">提交更正</el-button>
-            </el-form-item>
-          </el-form>
-        </el-card>
-      </el-tab-pane>
+      
     </el-tabs>
   </div>
 </template>

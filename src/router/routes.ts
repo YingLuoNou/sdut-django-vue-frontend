@@ -46,6 +46,12 @@ export const routes = [
     path:"/leavedetail",
     name:"leavedetail",
     component: () => import("@/views/leavedetail.vue"),
+  },
+  {
+    path:"/approveleave_mas",
+
+    name:"approveleave_mas",
+    component: () => import("@/views/approveleave_mas.vue"),
   }
 ]
 

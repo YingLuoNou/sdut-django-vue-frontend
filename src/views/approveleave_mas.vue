@@ -31,7 +31,7 @@
           <el-table-column label="操作" width="200">
             <template #default="{ row }">
               <el-button
-                v-if="row.status === 0"
+                v-if="row.status === 0 || row.status === 4"
                 type="success"
                 size="small"
                 @click="approveLeave(row.id)"
@@ -40,9 +40,6 @@
               >
                 批准
               </el-button>
-
-              
-
               <el-button
                 v-if="row.status === 0 || row.status === 4"
                 type="danger"
@@ -154,8 +151,8 @@
       </el-tab-pane>
 
       <!-- 长假待审核 Tab (状态 4) -->
-      <el-tab-pane label="长时请假待审核" name="4">
-        <el-table :data="filteredLeaveRequests['4']" border style="width: 100%" v-loading="isLoading">
+      <el-tab-pane label="长时请假待审核" name="5">
+        <el-table :data="filteredLeaveRequests['5']" border style="width: 100%" v-loading="isLoading">
           <!-- 请假详情 -->
           <el-table-column prop="student_name" label="学生姓名" width="150"></el-table-column>
           <el-table-column prop="reason" label="请假事由"></el-table-column>
@@ -179,17 +176,17 @@
           <el-table-column label="操作" width="200">
             <template #default="{ row }">
               <el-button
-                v-if="row.status === 4"
+                v-if="row.status === 5"
                 type="success"
                 size="small"
-                @click="pre_approveLeave(row.id)"
+                @click="approveLeave(row.id)"
                 :disabled="isApproving[row.id]"
                 :loading="isApproving[row.id]"
               >
-              初审通过
+                批准
               </el-button>
               <el-button
-                v-if="row.status === 4"
+                v-if="row.status === 5"
                 type="danger"
                 size="small"
                 @click="rejectLeave(row.id)"
@@ -271,26 +268,6 @@ export default {
         }, 3000)
       }
     }
-
-    const pre_approveLeave = async (leaveId) => {
-      if (isApproving[leaveId]) return // 防止多次点击
-
-      try {
-        isApproving[leaveId] = true
-        await request.patch(`/pre_approve_leave/${leaveId}/`, { status: 5 })
-        await fetchLeaveRequests() // 刷新列表
-        ElMessage.success('假条已初审')
-      } catch (error) {
-        console.error('批准请假失败:', error)
-        ElMessage.error('批准失败')
-      } finally {
-        // 三秒后恢复按钮状态
-        setTimeout(() => {
-          isApproving[leaveId] = false
-        }, 3000)
-      }
-    }
-
 
     // 销假
     const completeLeave = async (leaveId) => {
@@ -377,7 +354,8 @@ export default {
         '1': [],
         '2': [],
         '3': [],
-        '4': []
+        '4': [],
+        '5': []
       }
 
       leaveRequests.value.forEach((leave) => {
@@ -414,8 +392,7 @@ export default {
       isApproving,
       isRejecting,
       isCompleting,
-      handleTabClick,
-      pre_approveLeave
+      handleTabClick
     }
   }
 }
