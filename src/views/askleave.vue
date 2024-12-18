@@ -45,7 +45,15 @@
       </el-form-item>
 
       <el-form-item>
-        <el-button type="primary" @click="submitLeaveRequest">提交申请</el-button>
+        <el-button
+          type="primary"
+          :disabled="isSubmitting"
+          :loading="isSubmitting"
+          @click="submitLeaveRequest"
+          :class="{ 'btn-submitting': isSubmitting }"
+        >
+          提交申请
+        </el-button>
         <el-button @click="resetForm">重置</el-button>
       </el-form-item>
     </el-form>
@@ -80,17 +88,30 @@ export default {
       ]
     }
 
+    const isSubmitting = ref(false) // 控制按钮禁用状态
+
     const submitLeaveRequest = async () => {
+      if (isSubmitting.value) return // 防止多次点击
+
       formRef.value.validate(async (valid) => {
         if (valid) {
           try {
+            isSubmitting.value = true // 禁用按钮并变色
+
             const response = await request.post('/request-leave/', leaveForm.value)
             console.log('后端返回数据:', response)
             ElMessage.success('请假申请提交成功！')
-            // 根据需要在此进行其他逻辑操作，如清空表单等
+
+            // 清空表单
+            resetForm()
           } catch (error) {
             console.error('提交请求时出错:', error)
             ElMessage.error('提交失败，请稍后重试')
+          } finally {
+            // 禁用按钮三秒后重新启用
+            setTimeout(() => {
+              isSubmitting.value = false
+            }, 3000)
           }
         } else {
           ElMessage.error('请检查表单项')
@@ -107,7 +128,8 @@ export default {
       submitLeaveRequest,
       resetForm,
       formRef,
-      rules
+      rules,
+      isSubmitting
     }
   }
 }
@@ -126,5 +148,12 @@ export default {
 
 .el-button {
   margin-right: 10px;
+}
+
+/* 按钮提交时的样式 */
+.btn-submitting {
+  background-color: green !important;
+  border-color: green !important;
+  cursor: not-allowed !important;
 }
 </style>

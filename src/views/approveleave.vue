@@ -86,17 +86,55 @@ export default {
       }
     }
 
-    // 拒绝请假
-    const rejectLeave = async (leaveId) => {
-      try {
-        await request.patch(`/admin/reject-leave/${leaveId}/`, { status: 2 })
-        await fetchLeaveRequests() // 刷新列表
-        ElMessage.success('假条已拒绝')
-      } catch (error) {
-        console.error('拒绝请假失败:', error)
-        ElMessage.error('拒绝失败')
+    // 定义 rejectLeave 函数
+  const rejectLeave = async (leaveId) => {
+  try {
+    // 使用 Element Plus 的 MessageBox.prompt 提示用户输入拒绝理由
+    const { value: rejectReason } = await ElMessageBox.prompt(
+      '请输入拒绝理由', // 提示信息
+      '拒绝请假',       // 弹窗标题
+      {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        inputPlaceholder: '拒绝理由',
+        inputValidator: (value) => {
+          if (!value.trim()) {
+            return '拒绝理由不能为空'
+          }
+          return true
+        }
       }
+    )
+
+    // 发送 POST 请求，包含 reject_reason
+    await request.post(`/admin/reject-leave/${leaveId}/`, {
+      reject_reason: rejectReason
+    })
+
+    // 刷新请假请求列表
+    await fetchLeaveRequests()
+
+    // 显示成功消息
+    ElMessage.success('假条已拒绝')
+  } catch (error) {
+    // 处理用户取消输入的情况
+    if (error === 'cancel') {
+      ElMessage.info('取消拒绝操作')
+      return
     }
+
+    // 处理其他错误
+    console.error('拒绝请假失败:', error)
+    // 判断后端返回的具体错误信息
+    if (error.response && error.response.data) {
+      const errorMsg = error.response.data.error || '拒绝失败'
+      ElMessage.error(errorMsg)
+    } else {
+      ElMessage.error('拒绝失败')
+    }
+  }
+}
+
 
     onMounted(() => {
       fetchLeaveRequests()

@@ -88,7 +88,8 @@ export default {
         case 1:
           return '已批准'
         case 2:
-          return '已驳回'
+          // return '已驳回'
+          return row.reject_reason ? `已驳回: ${row.reject_reason}` : '已驳回'
         case 3:
           return '已销假'
         case 4:
