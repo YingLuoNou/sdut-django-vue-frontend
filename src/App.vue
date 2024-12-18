@@ -3,7 +3,7 @@ import { RouterView } from "vue-router"
 // import navbar_example from "@/views/navbar_example.vue"
 import Stu_Navbar from "./views/Stu_Navbar.vue";
 import Tch_Navbar from "./views/Tch_Navbar.vue";
-import {useUserStore} from "@/store/user.ts"
+import {useUserStore} from "@/store/user"
 import {ref,computed,watch} from "vue"
 
 const store = useUserStore()

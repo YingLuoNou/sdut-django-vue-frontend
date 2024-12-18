@@ -1,219 +1,246 @@
+<!-- leavedetail.vue -->
 <template>
-    <div class="leave-detail">
-      <h2 class="title">请假条</h2>
-      <div v-if="leave && userInfo" class="leave-content">
-        <div class="header-info">
-          <p>姓名：{{ userInfo.last_name }}</p>
-          <p>学号：{{ userInfo.student_number }}</p>
-          <p>班级：{{ userInfo.class_name }}</p>
-          <p>学院：电气与电子工程学院</p>
-        </div>
-  
-        <div class="leave-body">
-          <p><strong>请假原因：</strong>{{ leave.reason }}</p>
-          <p><strong>请假时间：</strong>{{ formattedLeaveDate }}</p>
-          <p><strong>当前状态：</strong>{{ formattedStatus }}</p>
-        </div>
-  
-        <!-- 底部区域：盖章和签字 -->
-        <div class="footer-info">
-          <div class="stamp-sign">
-            <div class="stamp">
-              <!-- 假设这里放一张印章的图片，如果有的话 -->
-              <!-- <img src="@/assets/stamp.png" alt="印章" /> -->
-              <span class="stamp-placeholder">[盖章处]</span>
-            </div>
-            <div class="sign">
-              <span class="sign-placeholder">[签字处]</span>
-            </div>
+  <div class="leave-detail">
+    <h2 class="title">请假条</h2>
+    <div v-if="leave && userInfo" class="leave-content">
+      <div class="header-info">
+        <p>姓名：{{ student_name }}</p>
+        <p>学号：{{ student_number }}</p>
+        <p>班级：{{ student_class }}</p>
+        <p>学院：电气与电子工程学院</p>
+      </div>
+
+      <div class="leave-body">
+        <p><strong>请假原因：</strong>{{ leave.reason }}</p>
+        <p><strong>请假时间：</strong>{{ formattedLeaveDate }}</p>
+        <p><strong>当前状态：</strong>{{ formattedStatus }}</p>
+      </div>
+
+      <div class="footer-info">
+        <div class="stamp-sign">
+          <div class="stamp">
+            <span>团委盖章：</span>
+            <img src="@/assets/stamp.png" alt="stamp" class="stamp-image" />
+            <span class="stamp-placeholder">团委盖章</span>
+          </div>
+          <div class="sign">
+            <span>批准人：</span>
+            <img :src="signatureImage" alt="签字" class="sign-image" />
+            <span class="sign-placeholder">签字人：{{ leave.approver }}</span>
           </div>
         </div>
-  
-        <!-- 批准和拒绝按钮（根据状态显示） -->
-        <div class="actions" v-if="leave.status === 0 || leave.status === 4">
-          <el-button type="success" size="mini" @click="approveLeave">批准</el-button>
-          <el-button type="danger" size="mini" @click="rejectLeave">拒绝</el-button>
-        </div>
       </div>
-      <div v-else>
-        <p>正在加载请假信息...</p>
+
+      <div class="actions" v-if="leave.status === 0 || leave.status === 4">
+        <el-button type="success" size="small" @click="approveLeave">批准</el-button>
+        <el-button type="danger" size="small" @click="rejectLeave">拒绝</el-button>
+        <el-button type="default" size="small" @click="closeDetail">关闭</el-button>
+      </div>
+      <div class="actions" v-else>
+        <el-button type="default" size="small" @click="closeDetail">关闭</el-button>
       </div>
     </div>
-  </template>
-  
-  <script>
-  import { ref, computed, onMounted } from 'vue'
-  import { ElMessage } from 'element-plus'
-  import request from '@/utils/request'
-  import { useRoute } from 'vue-router'
-  
-  export default {
-    name: 'LeaveDetail',
-    props: {
-      leaveId: {
-        type: Number,
-        required: true
+    <div v-else>
+      <p>正在加载请假信息...</p>
+    </div>
+  </div>
+</template>
+
+<script>
+import { ref, computed } from 'vue'
+import { ElMessage } from 'element-plus'
+import request from '@/utils/request'
+import { useUserStore } from '@/store/user'
+import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
+
+dayjs.extend(utc)
+
+export default {
+  name: 'LeaveDetail',
+  props: {
+    leave: {
+      type: Object,
+      required: true
+    }
+  },
+  setup(props, { emit }) {
+    const userStore = useUserStore()
+    const userInfo = ref(userStore.userInfo)
+    const student_name = props.leave.student_name
+    const student_number = props.leave.student_number
+    const student_class = props.leave.student_class
+
+    // 使用 import.meta.glob 批量导入签字图片
+    const signatures = import.meta.glob('@/assets/signatures/*.png', { eager: true })
+
+    // 创建签字图片映射
+    const signatureMap = {}
+    for (const path in signatures) {
+      const fileName = path.split('/').pop().split('.')[0] // 获取文件名（不含扩展名）
+      signatureMap[fileName] = signatures[path].default
+    }
+
+    const formatDate = (utcStr) => {
+      const date = dayjs.utc(utcStr).local()
+      return `${date.format('YYYY-MM-DD HH:mm')}`
+    }
+
+    const formattedLeaveDate = computed(() => {
+      if (!props.leave) return ''
+      const startFormatted = formatDate(props.leave.start_date)
+      const endFormatted = formatDate(props.leave.end_date)
+      return `从 ${startFormatted} 到 ${endFormatted}`
+    })
+
+    const formattedStatus = computed(() => {
+      if (!props.leave) return ''
+      switch (props.leave.status) {
+        case 0:
+          return '待批准'
+        case 1:
+          return '已批准'
+        case 2:
+          return '已驳回'
+        case 3:
+          return '已销假'
+        case 4:
+          return '待审核'
+        case 5:
+          return '已审核'
+        default:
+          return '未知状态'
       }
-    },
-    setup(props) {
-      const userInfo = ref(null)
-      const leave = ref(null)
-      const route = useRoute()
-  
-      // 格式化日期函数
-      const formatDate = (utcStr) => {
-        const date = new Date(utcStr)
-        return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(
-          date.getDate()
-        ).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:${String(
-          date.getMinutes()
-        ).padStart(2, '0')}`
-      }
-  
-      const formattedLeaveDate = computed(() => {
-        if (!leave.value) return ''
-        const startFormatted = formatDate(leave.value.start_date)
-        const endFormatted = formatDate(leave.value.end_date)
-        return `从 ${startFormatted} 到 ${endFormatted}`
-      })
-  
-      const formattedStatus = computed(() => {
-        if (!leave.value) return ''
-        switch (leave.value.status) {
-          case 0:
-            return '未批准'
-          case 1:
-            return '已批准'
-          case 2:
-            return '已驳回'
-          case 3:
-            return '已销假'
-          case 4:
-            return '待审核'
-          case 5:
-            return '已审核'
-          default:
-            return '未知状态'
-        }
-      })
-  
-      const fetchData = async () => {
-        try {
-          // 获取用户信息
-          const userRes = await request.get('/UserInfoView/')
-          userInfo.value = userRes
-  
-          // 获取请假条详情（假设通过 leave_id 参数获取详细信息）
-          const leaveRes = await request.get('/view-leave/', {
-            params: { leave_id: props.leaveId }
-          })
-          // 根据后端返回格式调整，此处假设返回单条记录对象
-          leave.value = Array.isArray(leaveRes) ? leaveRes[0] : leaveRes
-        } catch (error) {
-          console.error('获取数据出错:', error)
-        }
-      }
-  
-      const approveLeave = async () => {
-        try {
-          // 假设批准请假使用的接口为 /admin/approve-leave/<leave_id>/
-          await request.patch(`/admin/approve-leave/${props.leaveId}/`, { status: 1 })
-          ElMessage.success('请假已批准')
-          await fetchData() // 刷新数据
-        } catch (error) {
-          console.error('批准失败:', error)
-          ElMessage.error('批准失败，请稍后重试')
-        }
-      }
-  
-      const rejectLeave = async () => {
-        try {
-          // 假设拒绝请假使用的接口为 /admin/reject-leave/<leave_id>/
-          await request.patch(`/admin/reject-leave/${props.leaveId}/`, { status: 2 })
-          ElMessage.success('请假已拒绝')
-          await fetchData() // 刷新数据
-        } catch (error) {
-          console.error('拒绝失败:', error)
-          ElMessage.error('拒绝失败，请稍后重试')
-        }
-      }
-  
-      onMounted(() => {
-        fetchData()
-      })
-  
-      return {
-        userInfo,
-        leave,
-        formattedLeaveDate,
-        formattedStatus,
-        approveLeave,
-        rejectLeave
+    })
+
+    const signatureImage = computed(() => {
+      // 根据 approver 获取对应签字图片
+      return signatureMap[props.leave.approver] || signatureMap['default']
+    })
+
+    const approveLeave = async () => {
+      try {
+        const response = await request.post('/approve-leave/', {
+          leaveId: props.leave.id
+        })
+        ElMessage.success('请假已批准')
+        props.leave.status = 1
+        emit('close')
+      } catch (error) {
+        ElMessage.error('批准请假失败')
+        console.error('批准请假失败:', error)
       }
     }
+
+    const rejectLeave = async () => {
+      try {
+        const response = await request.post('/reject-leave/', {
+          leaveId: props.leave.id
+        })
+        ElMessage.success('请假已拒绝')
+        props.leave.status = 2
+        emit('close')
+      } catch (error) {
+        ElMessage.error('拒绝请假失败')
+        console.error('拒绝请假失败:', error)
+      }
+    }
+
+    const closeDetail = () => {
+      emit('close')
+    }
+
+    return {
+      userInfo,
+      formattedLeaveDate,
+      formattedStatus,
+      approveLeave,
+      rejectLeave,
+      signatureImage,
+      closeDetail,
+      student_class,
+      student_name,
+      student_number
+    }
   }
-  </script>
-  
-  <style scoped>
-  .leave-detail {
-    padding: 20px;
-    max-width: 600px;
-    margin: 0 auto;
-    border: 1px solid #dcdfe6;
-    border-radius: 8px;
-    background-color: #fff;
-    position: relative;
-  }
-  
-  .title {
-    text-align: center;
-    margin-bottom: 20px;
-    font-size: 24px;
-    font-weight: bold;
-  }
-  
-  .header-info {
-    margin-bottom: 20px;
-    font-size: 16px;
-  }
-  
-  .leave-body {
-    margin-bottom: 20px;
-    font-size: 16px;
-    line-height: 1.5;
-  }
-  
-  .footer-info {
-    position: relative;
-    min-height: 100px;
-    margin-top: 40px;
-    display: flex;
-    justify-content: flex-end;
-    align-items: flex-end;
-  }
-  
-  .stamp-sign {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-  }
-  
-  .stamp-placeholder,
-  .sign-placeholder {
-    display: inline-block;
-    width: 100px;
-    height: 50px;
-    border: 2px dashed #999;
-    line-height: 50px;
-    text-align: center;
-    color: #999;
-    margin-bottom: 10px;
-    font-size: 14px;
-  }
-  
-  .actions {
-    margin-top: 20px;
-    text-align: center;
-  }
-  </style>
-  
+}
+</script>
+
+<style scoped>
+.leave-detail {
+  padding: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+  border: 1px solid #dcdfe6;
+  border-radius: 8px;
+  background-color: #fff;
+  position: relative;
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.header-info {
+  margin-bottom: 20px;
+  font-size: 16px;
+}
+
+.leave-body {
+  margin-bottom: 20px;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.footer-info {
+  position: relative;
+  min-height: 100px;
+  margin-top: 40px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+
+.stamp-sign {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.stamp {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.stamp-image {
+  width: 100px; /* 调整盖章图片大小 */
+  height: auto;
+}
+
+.stamp-placeholder {
+  display: none; /* 隐藏占位符 */
+}
+
+.sign {
+  display: flex;
+  align-items: center;
+}
+
+.sign-image {
+  width: 100px; /* 调整签字图片大小 */
+  height: auto;
+}
+
+.sign-placeholder {
+  display: none; /* 隐藏占位符 */
+}
+
+.actions {
+  margin-top: 20px;
+  text-align: center;
+}
+</style>

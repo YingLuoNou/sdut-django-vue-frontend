@@ -2,20 +2,28 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import request from '@/utils/request'
 
+// 定义接口，确保返回的数据符合期望的结构
+interface UserInfo {
+  class_name: string | null
+  email: string | null
+  first_name: string | null
+  last_name: string | null
+  student_number: string | null
+  user_group: string | null
+}
+
+interface RefreshResponse {
+  access: string
+  refresh: string
+}
+
 export const useUserStore = defineStore('user', () => {
   // 存储 access_token 和 refresh_token
   const accessToken = ref<string | null>(localStorage.getItem('access_token') || null)
   const refreshToken = ref<string | null>(localStorage.getItem('refresh_token') || null)
 
   // 存储用户的详细信息
-  const userInfo = ref<{
-    class_name: string | null,
-    email: string | null,
-    first_name: string | null,
-    last_name: string | null,
-    student_number: string | null,
-    user_group: string | null
-  }>({
+  const userInfo = ref<UserInfo>({
     class_name: null,
     email: null,
     first_name: null,
@@ -38,10 +46,10 @@ export const useUserStore = defineStore('user', () => {
   const refreshAccessToken = async () => {
     if (refreshToken.value) {
       try {
-        const response = await request.post('/refresh-token/', {
+        const response = await request.post<RefreshResponse>('/refresh-token/', {
           refresh: refreshToken.value
         })
-        if (response && response.access) {
+        if (response && response.access && response.refresh) {
           setTokens(response.access, response.refresh)
         }
       } catch (error) {
@@ -53,7 +61,7 @@ export const useUserStore = defineStore('user', () => {
   // 获取用户信息
   const fetchUserInfo = async () => {
     try {
-      const response = await request.get('/UserInfoView/')
+      const response = await request.get<UserInfo>('/UserInfoView/')
       if (response) {
         userInfo.value = {
           class_name: response.class_name || null,

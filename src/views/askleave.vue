@@ -11,7 +11,7 @@
       @submit.prevent="submitLeaveRequest"
     >
       <!-- 请假开始时间 -->
-      <el-form-item label="请假开始时间" prop="start_date">
+      <el-form-item label="开始时间" prop="start_date">
         <el-date-picker
           v-model="leaveForm.start_date"
           type="datetime"
@@ -23,7 +23,7 @@
       </el-form-item>
 
       <!-- 请假结束时间 -->
-      <el-form-item label="请假结束时间" prop="end_date">
+      <el-form-item label="结束时间" prop="end_date">
         <el-date-picker
           v-model="leaveForm.end_date"
           type="datetime"

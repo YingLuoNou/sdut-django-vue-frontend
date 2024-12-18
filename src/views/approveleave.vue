@@ -20,13 +20,13 @@
       <!-- 操作按钮 -->
       <el-table-column label="操作" width="200">
         <template #default="{ row }">
-          <el-button v-if="row.status === 0 || row.status === 4" type="success" size="mini" @click="approveLeave(row.id)">
+          <el-button v-if="row.status === 0 || row.status === 4" type="success" size="small" @click="approveLeave(row.id)">
             批准
           </el-button>
-          <el-button v-if="row.status === 0 || row.status === 4" type="danger" size="mini" @click="rejectLeave(row.id)">
+          <el-button v-if="row.status === 0 || row.status === 4" type="danger" size="small" @click="rejectLeave(row.id)">
             拒绝
           </el-button>
-          <el-button v-if="row.status === 1 " type="success" size="mini" @click="completeLeave(row.id)">
+          <el-button v-if="row.status === 1 " type="success" size="small" @click="completeLeave(row.id)">
             销假
           </el-button>
         </template>
