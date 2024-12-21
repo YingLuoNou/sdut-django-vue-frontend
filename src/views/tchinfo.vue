@@ -106,7 +106,7 @@ export default {
           currentPassword,
           newPassword
         });
-        if (response.success) {
+        if (response.detail) {
           ElMessage.success('密码修改成功');
         }
       } catch (error) {

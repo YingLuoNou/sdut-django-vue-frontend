@@ -70,7 +70,7 @@ export default {
     const userStore = useUserStore()
 
     const formatDate = (utcStr) => {
-      const date = dayjs.utc(utcStr)
+      const date = dayjs(utcStr)
       return date.local().format('MM月DD日 HH时mm分')
     }
 

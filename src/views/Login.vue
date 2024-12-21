@@ -27,7 +27,8 @@ export default defineComponent({
     const handleLogin = async () => {
       try {
         // 使用 POST 请求来获取 token
-        const response = await request.post('https://sdut.ehzsy.online/api/token/', {
+        const response = await request.post('http://127.0.0.1:8000/api/token/', {
+        // const response = await request.post('https://sdut.ehzsy.online/api/token/', {
           username: username.value,
           password: password.value
         })
