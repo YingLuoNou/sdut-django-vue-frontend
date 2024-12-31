@@ -16,11 +16,11 @@ const request = axios.create({
 request.interceptors.request.use(
     (config) => {
         // 获取保存的 token（从 localStorage 或 Pinia 中获取）
-        const accessToken = localStorage.getItem('access_token') || null
+        const accessToken = localStorage.getItem("access_token") || null
 
         if (accessToken) {
             // 在请求头中加入 Authorization
-            config.headers['Authorization'] = `Bearer ${accessToken}`
+            config.headers["Authorization"] = `Bearer ${accessToken}`
         }
 
         return config

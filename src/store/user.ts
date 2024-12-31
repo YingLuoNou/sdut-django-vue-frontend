@@ -1,67 +1,77 @@
-import { defineStore } from 'pinia'
-import { ref } from 'vue'
-import request from '@/utils/request'
+import { defineStore } from "pinia";
+import { ref } from "vue";
+import request from "@/utils/request";
 
 // 定义接口，确保返回的数据符合期望的结构
 interface UserInfo {
-  class_name: string | null
-  email: string | null
-  first_name: string | null
-  last_name: string | null
-  student_number: string | null
-  user_group: string | null
+  class_name: string | null;
+  email: string | null;
+  first_name: string | null;
+  last_name: string | null;
+  student_number: string | null;
+  user_group: string | null;
 }
 
 interface RefreshResponse {
-  access: string
-  refresh: string
+  access: string;
+  refresh: string;
 }
 
-export const useUserStore = defineStore('user', () => {
+export const useUserStore = defineStore("user", () => {
   // 存储 access_token 和 refresh_token
-  const accessToken = ref<string | null>(localStorage.getItem('access_token') || null)
-  const refreshToken = ref<string | null>(localStorage.getItem('refresh_token') || null)
+  const accessToken = ref<string | null>(
+    localStorage.getItem("access_token") || null
+  );
+  const refreshToken = ref<string | null>(
+    localStorage.getItem("refresh_token") || null
+  );
 
   // 存储用户的详细信息
-  const userInfo = ref<UserInfo>({
-    class_name: null,
-    email: null,
-    first_name: null,
-    last_name: null,
-    student_number: null,
-    user_group: null
-  })
+  const userInfo = ref<UserInfo>(
+    JSON.parse(localStorage.getItem("user_info") || "null") || {
+      class_name: null,
+      email: null,
+      first_name: null,
+      last_name: null,
+      student_number: null,
+      user_group: null,
+    }
+  );
 
   // 设置 tokens
   const setTokens = (access: string, refresh: string) => {
-    accessToken.value = access
-    refreshToken.value = refresh
+    accessToken.value = access;
+    refreshToken.value = refresh;
 
     // 将 tokens 保存在 localStorage 中，方便后续使用
-    localStorage.setItem('access_token', access)
-    localStorage.setItem('refresh_token', refresh)
-  }
+    localStorage.setItem("access_token", access);
+    localStorage.setItem("refresh_token", refresh);
+  };
 
   // 刷新 accessToken
   const refreshAccessToken = async () => {
     if (refreshToken.value) {
       try {
-        const response = await request.post<RefreshResponse>('/refresh-token/', {
-          refresh: refreshToken.value
-        })
-        if (response && response.access && response.refresh) {
-          setTokens(response.access, response.refresh)
+        const response = await request.post<RefreshResponse>(
+          "/refresh-token/",
+          {
+            refresh: refreshToken.value,
+          }
+        );
+        if (response && response.access) {
+          setTokens(response.access, response.refresh || refreshToken.value);
         }
       } catch (error) {
-        console.error('刷新 token 失败', error)
+        console.error("刷新 token 失败", error);
+        clearUserInfo(); // 刷新失败时清空用户状态
       }
     }
-  }
+  };
 
   // 获取用户信息
   const fetchUserInfo = async () => {
     try {
-      const response = await request.get<UserInfo>('/UserInfoView/')
+      const response = await request.get<UserInfo>("/UserInfoView/");
       if (response) {
         userInfo.value = {
           class_name: response.class_name || null,
@@ -69,40 +79,52 @@ export const useUserStore = defineStore('user', () => {
           first_name: response.first_name || null,
           last_name: response.last_name || null,
           student_number: response.student_number || null,
-          user_group: response.user_group || null
-        }
-        // console.log('获取用户信息成功', userInfo.value)
+          user_group: response.user_group || null,
+        };
+
+        // 持久化用户信息
+        localStorage.setItem("user_info", JSON.stringify(userInfo.value));
       }
     } catch (error) {
-      console.error('获取用户信息失败', error)
-      // 如果获取失败，可以清空用户信息
-      userInfo.value = {
-        class_name: null,
-        email: null,
-        first_name: null,
-        last_name: null,
-        student_number: null,
-        user_group: null
-      }
+      console.error("获取用户信息失败", error);
+      clearUserInfo(); // 如果获取失败，清空用户信息
     }
-  }
+  };
+
+  // 清空用户信息
+  const clearUserInfo = () => {
+    userInfo.value = {
+      class_name: null,
+      email: null,
+      first_name: null,
+      last_name: null,
+      student_number: null,
+      user_group: null,
+    };
+    accessToken.value = null;
+    refreshToken.value = null;
+
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
+    localStorage.removeItem("user_info");
+  };
 
   // 初始化时检查 accessToken 是否有效
   const initializeUser = async () => {
     if (accessToken.value) {
-      await fetchUserInfo()
-    } else {
-      // 如果没有 accessToken，清空用户信息
-      userInfo.value = {
-        class_name: null,
-        email: null,
-        first_name: null,
-        last_name: null,
-        student_number: null,
-        user_group: null
+      try {
+        await fetchUserInfo(); // 获取用户信息
+      } catch (error) {
+        console.error("初始化用户信息失败", error);
+        await refreshAccessToken(); // 如果 accessToken 失效，尝试刷新
+        if (accessToken.value) {
+          await fetchUserInfo(); // 刷新成功后重新获取用户信息
+        }
       }
+    } else {
+      clearUserInfo(); // 如果没有 accessToken，清空用户信息
     }
-  }
+  };
 
   return {
     accessToken,
@@ -111,6 +133,7 @@ export const useUserStore = defineStore('user', () => {
     setTokens,
     refreshAccessToken,
     fetchUserInfo,
-    initializeUser
-  }
-})
+    initializeUser,
+    clearUserInfo,
+  };
+});
