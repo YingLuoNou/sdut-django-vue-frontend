@@ -32,7 +32,7 @@ const halo = () => {
         <p>将在 {{ countdown }} 秒后自动返回首页</p>
         <button @click="redirectToHome">立即返回首页</button>
         <div></div>
-        <button @click="halo">您也可以来我家看看</button>
+        <!-- <button @click="halo">您也可以来我家看看</button> -->
     </div>
 </template>
 
