@@ -29,6 +29,10 @@
                     <el-menu-item index="3">
                         <router-link to="/tchinfo">信息</router-link>
                     </el-menu-item>
+                    <el-menu-item index="4">
+                        <router-link to="/classmanage"
+                            >学生管理</router-link>
+                    </el-menu-item>
                 </el-menu>
             </el-col>
         </el-row>

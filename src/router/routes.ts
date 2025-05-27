@@ -58,11 +58,6 @@ export const routes = [
         name: "classmanage",
         component: () => import("@/views/classmanage.vue")
     },
-    {
-        path: "/deletstu",
-        name: "deletstu",
-        component: () => import("@/views/deletstu.vue")
-    }
 ]
 
 const router = createRouter({
