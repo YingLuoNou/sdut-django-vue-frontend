@@ -1,47 +1,53 @@
 <template>
     <!-- 底部固定横向导航栏 -->
     <el-footer class="navbar">
-      <el-row
-        type="flex"
-        justify="center"
-        align="middle"
-        class="navbar-container"
-      >
-        <el-col :span="24">
-          <el-menu
-            mode="horizontal"
-            class="navbar-menu"
-            active-text-color="#007bff"
-          >
-            <!-- 清空 overflow 触发按钮，彻底去掉“更多”省略号 -->
-            <template #overflowed-indicator></template>
-  
-            <el-menu-item index="1">
-              <router-link to="/approveleave_mas">假条批准</router-link>
-            </el-menu-item>
-            <!--
+        <el-row
+            type="flex"
+            justify="center"
+            align="middle"
+            class="navbar-container"
+        >
+            <el-col :span="24">
+                <el-menu
+                    mode="horizontal"
+                    class="navbar-menu"
+                    active-text-color="#007bff"
+                >
+                    <!-- 清空 overflow 触发按钮，彻底去掉“更多”省略号 -->
+                    <template #overflowed-indicator></template>
+
+                    <el-menu-item index="1">
+                        <router-link to="/approveleave_mas"
+                            >假条批准</router-link
+                        >
+                    </el-menu-item>
+                    <!--
             <el-menu-item index="2">
               <router-link to="/leaveinfo">所带班级信息</router-link>
             </el-menu-item>
             -->
-            <el-menu-item index="3">
-              <router-link to="/tchinfo">信息</router-link>
-            </el-menu-item>
-          </el-menu>
-        </el-col>
-      </el-row>
+                    <el-menu-item index="3">
+                        <router-link to="/tchinfo">信息</router-link>
+                    </el-menu-item>
+                    <el-menu-item index="4">
+                        <router-link to="/classmanage"
+                            >学生管理</router-link>
+                    </el-menu-item>
+                </el-menu>
+            </el-col>
+        </el-row>
     </el-footer>
-  </template>
-  
-  <script>
-  export default {
+</template>
+
+<script>
+export default {
     name: "Mas_Navbar"
-  };
-  </script>
-  
-  <style scoped>
-  /* 底部固定导航栏样式 */
-  .navbar {
+}
+</script>
+
+<style scoped>
+/* 底部固定导航栏样式 */
+.navbar {
     position: fixed;
     bottom: 0;
     left: 0;
@@ -52,17 +58,17 @@
     z-index: 1000;
     padding: 0;
     margin: 0;
-  }
-  
-  /* 导航栏容器 */
-  .navbar-container {
+}
+
+/* 导航栏容器 */
+.navbar-container {
     width: 100%;
     padding: 0;
     margin: 0;
-  }
-  
-  /* 菜单样式 */
-  .navbar-menu {
+}
+
+/* 菜单样式 */
+.navbar-menu {
     display: flex;
     justify-content: space-evenly; /* 平均分布菜单项 */
     padding: 0;
@@ -70,41 +76,40 @@
     background-color: #f9f9f9; /* 设置背景颜色 */
     border-radius: 0; /* 去掉默认边框 */
     white-space: nowrap; /* 防止折行 */
-  }
-  
-  /* 隐藏 Element-Plus 自动添加的 overflow 按钮 */
-  .navbar-menu .el-menu__overflowed-button,
-  .navbar-menu .el-menu__overflowed-dropdown {
+}
+
+/* 隐藏 Element-Plus 自动添加的 overflow 按钮 */
+.navbar-menu .el-menu__overflowed-button,
+.navbar-menu .el-menu__overflowed-dropdown {
     display: none !important;
-  }
-  
-  /* 单个菜单项样式 */
-  .navbar-menu .el-menu-item {
+}
+
+/* 单个菜单项样式 */
+.navbar-menu .el-menu-item {
     font-size: 16px;
     font-weight: 500;
     border: none; /* 去除菜单项边框 */
     text-align: center; /* 文字居中 */
-  }
-  
-  /* 鼠标悬停效果 */
-  .navbar-menu .el-menu-item:hover {
+}
+
+/* 鼠标悬停效果 */
+.navbar-menu .el-menu-item:hover {
     color: #007bff;
     text-decoration: underline;
     background-color: rgba(0, 123, 255, 0.2);
-  }
-  
-  /* 高亮的选项卡样式 */
-  .navbar-menu .el-menu-item.is-active {
+}
+
+/* 高亮的选项卡样式 */
+.navbar-menu .el-menu-item.is-active {
     background-color: #d5dbe0;
     color: white;
-  }
-  
-  /* 响应式设计 */
-  @media (max-width: 768px) {
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
     .navbar-menu .el-menu-item {
-      padding: 0 15px;
-      font-size: 14px;
+        padding: 0 15px;
+        font-size: 14px;
     }
-  }
-  </style>
-  
+}
+</style>

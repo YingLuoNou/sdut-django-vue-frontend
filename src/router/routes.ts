@@ -52,7 +52,12 @@ export const routes = [
 
         name: "approveleave_mas",
         component: () => import("@/views/approveleave_mas.vue")
-    }
+    },
+    {
+        path: "/classmanage",
+        name: "classmanage",
+        component: () => import("@/views/classmanage.vue")
+    },
 ]
 
 const router = createRouter({
