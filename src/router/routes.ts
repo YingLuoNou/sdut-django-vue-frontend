@@ -57,6 +57,11 @@ export const routes = [
         path: "/classmanage",
         name: "classmanage",
         component: () => import("@/views/classmanage.vue")
+    },
+    {
+        path: "/deletstu",
+        name: "deletstu",
+        component: () => import("@/views/deletstu.vue")
     }
 ]
 

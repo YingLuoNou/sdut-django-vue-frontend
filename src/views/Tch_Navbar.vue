@@ -28,7 +28,10 @@
                         <router-link to="/tchinfo">个人信息</router-link>
                     </el-menu-item>
                     <el-menu-item index="4">
-                        <router-link to="/classmanage">班级管理</router-link>
+                        <router-link to="/classmanage">班级管理测试</router-link>
+                    </el-menu-item>
+                    <el-menu-item index="5">
+                        <router-link to="/deletstu">学生删除测试</router-link>
                     </el-menu-item>
                 </el-menu>
             </el-col>

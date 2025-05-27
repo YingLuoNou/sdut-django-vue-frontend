@@ -38,7 +38,7 @@
             </div>
             <div>
                 <label
-                    >辅导员姓:
+                    >辅导员姓名:
                     <input v-model="form.advisor_last_name" required />
                 </label>
             </div>
@@ -79,7 +79,7 @@ async function submitForm() {
     errors.value = null
     try {
         const response = await request.post("/admin/students/add/", form)
-        message.value = response.data.message
+        message.value = response.message
         // 清空表单或保留视需求调整
     } catch (err) {
         if (err.response && err.response.data) {
