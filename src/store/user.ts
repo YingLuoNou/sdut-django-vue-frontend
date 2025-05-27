@@ -58,10 +58,10 @@ export const useUserStore = defineStore("user", () => {
                         refresh: refreshToken.value
                     }
                 )
-                if (response && response.data.access) {
+                if (response && response.access) {
                     setTokens(
-                        response.data.access,
-                        response.data.refresh || refreshToken.value
+                        response.access,
+                        response.refresh || refreshToken.value
                     )
                 }
             } catch (error) {
@@ -77,12 +77,12 @@ export const useUserStore = defineStore("user", () => {
             const response = await request.get<UserInfo>("/UserInfoView/")
             if (response) {
                 userInfo.value = {
-                    class_name: response.data.class_name || null,
-                    email: response.data.email || null,
-                    first_name: response.data.first_name || null,
-                    last_name: response.data.last_name || null,
-                    student_number: response.data.student_number || null,
-                    user_group: response.data.user_group || null
+                    class_name: response.class_name || null,
+                    email: response.email || null,
+                    first_name: response.first_name || null,
+                    last_name: response.last_name || null,
+                    student_number: response.student_number || null,
+                    user_group: response.user_group || null
                 }
 
                 // 持久化用户信息

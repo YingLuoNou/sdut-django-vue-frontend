@@ -1,6 +1,6 @@
 // src/utils/request.ts
 import axios from "axios"
-import type { InternalAxiosRequestConfig , AxiosResponse } from "axios"
+import type { InternalAxiosRequestConfig, AxiosResponse } from "axios"
 
 // 从环境变量中获取基础配置（Vite）
 const BASE_URL = import.meta.env.VITE_REQUEST_BASE_URL as string

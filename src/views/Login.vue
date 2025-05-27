@@ -31,11 +31,11 @@ export default defineComponent({
         const handleLogin = async () => {
             try {
                 // 只传相对路径，baseURL + prefix 已在 request.ts 里配置好
-                const response = await request.post("/token/", {
+                const data = await request.post("/token/", {
                     username: username.value,
                     password: password.value
                 })
-                const data = response.data
+                //const data = response.data
                 if (data.access) {
                     // 保存 tokens 到 Pinia
                     userStore.setTokens(data.access, data.refresh)
