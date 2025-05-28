@@ -33,7 +33,7 @@
                                 查看
                             </el-button>
                             <el-button
-                                v-if="row.status === 0 "
+                                v-if="row.status === 0"
                                 type="danger"
                                 size="small"
                                 @click="cancelLeave(row.id)"
@@ -125,20 +125,16 @@ export default {
         // 取消请假
         const cancelLeave = async (leaveId) => {
             try {
-                await ElMessageBox.confirm(
-                    "确定要取消这条请假吗？",
-                    "提示",
-                    {
-                        confirmButtonText: "确定",
-                        cancelButtonText: "取消",
-                        type: "warning"
-                    }
-                )
+                await ElMessageBox.confirm("确定要取消这条请假吗？", "提示", {
+                    confirmButtonText: "确定",
+                    cancelButtonText: "取消",
+                    type: "warning"
+                })
                 await request.patch(`/cancel-leave/${leaveId}/`)
                 ElMessage.success("取消成功")
                 fetchLeaveRequests()
             } catch (error) {
-                if (error !== 'cancel') {
+                if (error !== "cancel") {
                     console.error("取消失败:", error)
                     ElMessage.error("取消失败，请稍后重试")
                 }
@@ -187,7 +183,7 @@ export default {
             formatLeaveDate,
             formatStatus,
             viewLeaveDetail,
-            cancelLeave, 
+            cancelLeave,
             currentPage,
             pageSize,
             total,
