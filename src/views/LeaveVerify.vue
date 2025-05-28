@@ -27,7 +27,7 @@
                             {{ data.student_class }}
                         </el-descriptions-item>
                         <el-descriptions-item label="请假开始时间">
-                            {{ formatDate(data.start_date) }} 
+                            {{ formatDate(data.start_date) }}
                         </el-descriptions-item>
                         <el-descriptions-item label="请假结束时间">
                             {{ formatDate(data.end_date) }}
@@ -85,7 +85,6 @@ const statusMap: Record<number, string> = {
     4: "待审核",
     5: "已审核"
 }
-
 
 const formatDate = (utcStr: string) => {
     const date = dayjs.utc(utcStr).local()

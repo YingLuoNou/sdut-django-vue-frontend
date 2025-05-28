@@ -15,9 +15,9 @@
                 <p><strong>请假时间：</strong>{{ formattedLeaveDate }}</p>
                 <p><strong>当前状态：</strong>{{ formattedStatus }}</p>
             </div>
-            
+
             <p>注：防伪二维码含有个人信息，请勿透漏给陌生人</p>
-            <p>除特殊情况外无防伪二维码或二维码无法扫描查询均视为假条无效</p>
+            <p>除维护等特殊情况外无防伪二维码或二维码无法扫描查询均视为假条无效</p>
 
             <div class="footer-info">
                 <!-- 左侧：防伪二维码 -->
