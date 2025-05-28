@@ -16,7 +16,19 @@
                 <p><strong>当前状态：</strong>{{ formattedStatus }}</p>
             </div>
 
-            <div class="footer-info">
+                <div class="footer-info">
+                <!-- 左侧：防伪二维码 -->
+                <div class="qrcode-block">
+                    <p class="qrcode-title">防伪二维码</p>
+                    <img
+                        :src="`/view-leave/qrcode/${leave.verification_uuid}/`"
+                        alt="防伪二维码"
+                        class="qrcode-image"
+                    />
+                    <p class="qrcode-hint">扫码查看详情</p>
+                </div>
+
+                <!-- 右侧：团委盖章 & 签字区域 -->
                 <div class="stamp-sign">
                     <div class="stamp">
                         <span>团委盖章：</span>
@@ -25,7 +37,6 @@
                             alt="stamp"
                             class="stamp-image"
                         />
-                        <span class="stamp-placeholder">团委盖章</span>
                     </div>
                     <div class="sign">
                         <span>批准人：</span>
@@ -265,5 +276,25 @@ export default {
 .actions {
     margin-top: 20px;
     text-align: center;
+}
+/* 防伪二维码样式 */
+.qrcode-block {
+    text-align: center;
+    margin: 20px 0;
+}
+.qrcode-title {
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+.qrcode-image {
+    width: 180px;
+    height: 180px;
+    border: 1px solid #eee;
+    padding: 4px;
+}
+.qrcode-hint {
+    margin-top: 4px;
+    color: #888;
+    font-size: 12px;
 }
 </style>
