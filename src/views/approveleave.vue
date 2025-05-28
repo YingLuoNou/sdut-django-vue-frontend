@@ -202,7 +202,8 @@ async function rejectLeave(id) {
         leaveRequests.value = leaveRequests.value.filter((r) => r.id !== id)
         total.value--
     } catch (err) {
-        if (err !== "cancel") ElMessage.error("拒绝失败，可能是学生已取消，请刷新重试")
+        if (err !== "cancel")
+            ElMessage.error("拒绝失败，可能是学生已取消，请刷新重试")
     } finally {
         loadingMap[id].rejecting = false
     }
