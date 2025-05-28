@@ -19,15 +19,30 @@
                 <div v-if="isStu">
                     <Stu_Navbar />
                 </div>
-                <div v-if="isTch">
+                <div v-else-if="isTch">
                     <Tch_Navbar />
                 </div>
-                <div v-if="isMas">
+                <div v-else-if="isMas">
                     <Mas_Navbar />
                 </div>
-                <!-- 如果都不渲染导航栏，就显示版权信息 -->
-                <div v-if="!isStu && !isTch && !isMas" class="copyright">
-                    ©copyright 2025 eh All rights reserved.
+                 <!-- 版权信息：始终显示,仍需修改 -->
+                <div
+                    class="copyright"
+                    :class="{ 'copyright-small': isStu || isTch || isMas }"
+                    >
+                    ©copyright 2025 ehall rights reserved. Powered by 
+                    <a
+                        href="https://github.com/zsyeh"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        >eh</a
+                    > and 
+                    <a
+                        href="https://github.com/YingLuoNou"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        >yln</a
+                    >.
                 </div>
             </el-footer>
         </el-container>
@@ -35,7 +50,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, watch } from "vue"
+import { ref, computed, watch, onMounted  } from "vue"
 import { useRouter } from "vue-router"
 import { ElMessageBox, ElMessage } from "element-plus"
 import { useUserStore } from "@/store/user"
@@ -63,7 +78,6 @@ watch(
     },
     { immediate: true }
 )
-
 // 点击顶部 Logo 时确认退出登录
 async function confirmLogout() {
     try {
@@ -114,13 +128,31 @@ async function confirmLogout() {
     position: relative;
 }
 
-/* 版权信息 */
+/* 版权信息 -- 默认样式 */
 .navibar .copyright {
-    text-align: center;
-    font-size: 12px;
-    color: #aaaaaa;
-    padding: 8px 0;
-    background-color: #2c2f33;
-    white-space: nowrap;
+    position: absolute;
+  bottom: 4px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  font-size: 12px;
+  color: #aaaaaa;
+  background-color: transparent;
+  white-space: nowrap;
 }
+
+/* 如果同时有导航栏，使用更小的文字，并额外留白 */
+.navibar .copyright-small {
+  margin-top: 4px;
+  background-color: transparent; /* 如果想底色和导航一致，可去掉 */
+}
+
+a {
+  color: #409EFF;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
 </style>

@@ -17,18 +17,30 @@
             </div>
 
             <div class="footer-info">
+                <!-- 左侧：防伪二维码 -->
+                <div class="qrcode-block">
+                    <p class="qrcode-title">防伪二维码</p>
+                        <img
+                            v-if="qrcodeUrl"
+                            :src="qrcodeUrl"
+                            alt="防伪二维码"
+                            class="qrcode-image"
+                        />
+                    <p v-else class="qrcode-hint">二维码加载中…</p>
+                </div>
+
+                <!-- 右侧：团委盖章 & 签字区域 -->
                 <div class="stamp-sign">
                     <div class="stamp">
-                        <span>团委盖章：</span>
+                        <span>团委盖章:</span>
                         <img
                             src="@/assets/stamp.png"
                             alt="stamp"
                             class="stamp-image"
                         />
-                        <span class="stamp-placeholder">团委盖章</span>
                     </div>
                     <div class="sign">
-                        <span>批准人：</span>
+                        <span>批准人:</span>
                         <img
                             :src="signatureImage"
                             alt="签字"
@@ -68,7 +80,7 @@
 </template>
 
 <script>
-import { ref, computed } from "vue"
+import { ref, computed, watch } from "vue"
 import { ElMessage } from "element-plus"
 import request from "@/utils/request"
 import { useUserStore } from "@/store/user"
@@ -91,7 +103,8 @@ export default {
         const student_name = props.leave.student_name
         const student_number = props.leave.student_number
         const student_class = props.leave.student_class
-
+        // 二维码 URL
+        const qrcodeUrl = ref("")
         // 使用 import.meta.glob 批量导入签字图片
         const signatures = import.meta.glob("@/assets/signatures/*.png", {
             eager: true
@@ -103,6 +116,24 @@ export default {
             const fileName = path.split("/").pop().split(".")[0] // 获取文件名（不含扩展名）
             signatureMap[fileName] = signatures[path].default
         }
+        
+
+        watch(
+        () => props.leave.verification_uuid,
+        async (uuid) => {
+            if (!uuid) return
+            try {
+            const res = await request.get(
+                `/view-leave/qrcode/${uuid}/`,
+                { responseType: "blob" }
+            )
+            qrcodeUrl.value = URL.createObjectURL(res)
+            } catch (err) {
+            console.error("二维码加载失败:", err)
+            }
+        },
+        { immediate: true }
+        )
 
         const formatDate = (utcStr) => {
             const date = dayjs.utc(utcStr).local()
@@ -183,7 +214,8 @@ export default {
             closeDetail,
             student_class,
             student_name,
-            student_number
+            student_number,
+            qrcodeUrl
         }
     }
 }
@@ -191,7 +223,7 @@ export default {
 
 <style scoped>
 .leave-detail {
-    padding: 20px;
+    padding: 8px;
     max-width: 600px;
     margin: 0 auto;
     border: 1px solid #dcdfe6;
@@ -223,7 +255,7 @@ export default {
     min-height: 100px;
     margin-top: 40px;
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: flex-end;
 }
 
@@ -237,10 +269,11 @@ export default {
     display: flex;
     align-items: center;
     margin-bottom: 10px;
+    
 }
 
 .stamp-image {
-    width: 100px; /* 调整盖章图片大小 */
+    width: 80px; /* 调整盖章图片大小 */
     height: auto;
 }
 
@@ -254,7 +287,7 @@ export default {
 }
 
 .sign-image {
-    width: 100px; /* 调整签字图片大小 */
+    width: 80px; /* 调整签字图片大小 */
     height: auto;
 }
 
@@ -265,5 +298,28 @@ export default {
 .actions {
     margin-top: 20px;
     text-align: center;
+}
+/* 防伪二维码样式 */
+.qrcode-block {
+    text-align: center;
+    margin: 0;
+    display: inline-block;
+    margin-right: auto;
+}
+.qrcode-title {
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+.qrcode-image {
+    width: 100px;
+    height: 100px;
+    border: 1px solid #eee;
+    padding: 2px;
+    margin-left: 5px;
+}
+.qrcode-hint {
+    margin-top: 4px;
+    color: #888;
+    font-size: 12px;
 }
 </style>

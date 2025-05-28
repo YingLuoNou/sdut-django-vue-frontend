@@ -1,5 +1,4 @@
-# Vue Template 🚀
-测试TesT  
+# Vue Template 🚀 
 该项目是一个基于Vue 3.0的前端模板，使用了以下技术和工具进行开发和构建。
 
 ## 技术栈
