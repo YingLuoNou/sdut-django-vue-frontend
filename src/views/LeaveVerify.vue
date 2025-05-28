@@ -1,6 +1,6 @@
 <template>
     <el-card class="verify-container" shadow="hover">
-        <h2>假条防伪验证</h2>
+        <h1>假条防伪验证</h1>
 
         <el-skeleton :loading="loading" animated>
             <template #template>
@@ -62,13 +62,16 @@
     </el-card>
 </template>
 
+
+
 <script setup lang="ts">
 import { ref, onMounted } from "vue"
 import { useRoute } from "vue-router"
 import request from "@/utils/request"
 
-const route = useRoute<{ uuid: string }>()
-const uuid = route.params.uuid!
+const route = useRoute()
+const rawUuid = route.params.uuid 
+const uuid = ref('')
 
 const data = ref<any>(null)
 const loading = ref(true)
@@ -89,11 +92,22 @@ function formatDate(val: string) {
 function formatDateTime(val: string) {
     return val.replace("T", " ").slice(0, 19)
 }
+// 把 32 位连在一起的 uuid 转成标准带横杠的格式
+function formatUuid(s) {
+  // 如果已经带横杠，直接返回
+  if (s.includes('-')) return s
+  // 插入 8-4-4-4-12
+  return s.replace(
+    /^(.{8})(.{4})(.{4})(.{4})(.{12})$/,
+    '$1-$2-$3-$4-$5'
+  )
+}
 
 onMounted(async () => {
+    uuid.value = formatUuid(rawUuid)
     try {
-        const res = await request.get(`/api/leave/verify/${uuid}/`)
-        data.value = res.data
+        const res = await request.get(`/leave/verify/${uuid.value}/`)
+        data.value = res
     } catch (err: any) {
         // 不管是 “不存在” 还是 “未批准”，后端都返回 400
         if (err.response?.status === 400) {
@@ -127,5 +141,13 @@ onMounted(async () => {
 .qrcode img {
     width: 180px;
     height: 180px;
+}
+.navibar .copyright {
+    text-align: center;
+    font-size: 12px;
+    color: #aaaaaa;
+    padding: 8px 0;
+    background-color: #2c2f33;
+    white-space: nowrap;
 }
 </style>
