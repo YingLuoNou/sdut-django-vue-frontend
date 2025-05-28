@@ -16,16 +16,23 @@
                 <p><strong>当前状态：</strong>{{ formattedStatus }}</p>
             </div>
 
+            <div class="warning">
+                <p>注：防伪二维码含有个人信息，请勿透漏给陌生人</p>
+                <p>
+                    除维护等特殊情况外无防伪二维码或二维码无法扫描查询均视为假条无效
+                </p>
+            </div>
+
             <div class="footer-info">
                 <!-- 左侧：防伪二维码 -->
                 <div class="qrcode-block">
                     <p class="qrcode-title">防伪二维码</p>
-                        <img
-                            v-if="qrcodeUrl"
-                            :src="qrcodeUrl"
-                            alt="防伪二维码"
-                            class="qrcode-image"
-                        />
+                    <img
+                        v-if="qrcodeUrl"
+                        :src="qrcodeUrl"
+                        alt="防伪二维码"
+                        class="qrcode-image"
+                    />
                     <p v-else class="qrcode-hint">二维码加载中…</p>
                 </div>
 
@@ -116,23 +123,22 @@ export default {
             const fileName = path.split("/").pop().split(".")[0] // 获取文件名（不含扩展名）
             signatureMap[fileName] = signatures[path].default
         }
-        
 
         watch(
-        () => props.leave.verification_uuid,
-        async (uuid) => {
-            if (!uuid) return
-            try {
-            const res = await request.get(
-                `/view-leave/qrcode/${uuid}/`,
-                { responseType: "blob" }
-            )
-            qrcodeUrl.value = URL.createObjectURL(res)
-            } catch (err) {
-            console.error("二维码加载失败:", err)
-            }
-        },
-        { immediate: true }
+            () => props.leave.verification_uuid,
+            async (uuid) => {
+                if (!uuid) return
+                try {
+                    const res = await request.get(
+                        `/view-leave/qrcode/${uuid}/`,
+                        { responseType: "blob" }
+                    )
+                    qrcodeUrl.value = URL.createObjectURL(res)
+                } catch (err) {
+                    console.error("二维码加载失败:", err)
+                }
+            },
+            { immediate: true }
         )
 
         const formatDate = (utcStr) => {
@@ -250,6 +256,12 @@ export default {
     line-height: 1.5;
 }
 
+.warning {
+    margin-bottom: 20px;
+    font-size: 9px;
+    line-height: 1.1;
+}
+
 .footer-info {
     position: relative;
     min-height: 100px;
@@ -269,7 +281,6 @@ export default {
     display: flex;
     align-items: center;
     margin-bottom: 10px;
-    
 }
 
 .stamp-image {
@@ -307,6 +318,7 @@ export default {
     margin-right: auto;
 }
 .qrcode-title {
+    font-size: 12px;
     font-weight: 500;
     margin-bottom: 5px;
 }

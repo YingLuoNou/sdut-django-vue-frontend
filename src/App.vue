@@ -25,18 +25,19 @@
                 <div v-else-if="isMas">
                     <Mas_Navbar />
                 </div>
-                 <!-- 版权信息：始终显示,仍需修改 -->
+                <!-- 版权信息：始终显示,仍需修改 -->
                 <div
                     class="copyright"
                     :class="{ 'copyright-small': isStu || isTch || isMas }"
-                    >
-                    ©copyright 2025 ehall rights reserved. Powered by 
+                >
+                    ©copyright 2025 eh all rights reserved. Powered by
                     <a
                         href="https://github.com/zsyeh"
                         target="_blank"
                         rel="noopener noreferrer"
                         >eh</a
-                    > and 
+                    >
+                    and
                     <a
                         href="https://github.com/YingLuoNou"
                         target="_blank"
@@ -50,7 +51,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, watch, onMounted  } from "vue"
+import { ref, computed, watch, onMounted } from "vue"
 import { useRouter } from "vue-router"
 import { ElMessageBox, ElMessage } from "element-plus"
 import { useUserStore } from "@/store/user"
@@ -131,28 +132,27 @@ async function confirmLogout() {
 /* 版权信息 -- 默认样式 */
 .navibar .copyright {
     position: absolute;
-  bottom: 4px;
-  left: 0;
-  width: 100%;
-  text-align: center;
-  font-size: 12px;
-  color: #aaaaaa;
-  background-color: transparent;
-  white-space: nowrap;
+    bottom: 4px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 12px;
+    color: #aaaaaa;
+    background-color: transparent;
+    white-space: nowrap;
 }
 
 /* 如果同时有导航栏，使用更小的文字，并额外留白 */
 .navibar .copyright-small {
-  margin-top: 4px;
-  background-color: transparent; /* 如果想底色和导航一致，可去掉 */
+    margin-top: 4px;
+    background-color: transparent; /* 如果想底色和导航一致，可去掉 */
 }
 
 a {
-  color: #409EFF;
-  text-decoration: none;
+    color: #409eff;
+    text-decoration: none;
 }
 a:hover {
-  text-decoration: underline;
+    text-decoration: underline;
 }
-
 </style>

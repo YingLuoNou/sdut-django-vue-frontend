@@ -32,6 +32,14 @@
                             >
                                 查看
                             </el-button>
+                            <el-button
+                                v-if="row.status === 0 "
+                                type="danger"
+                                size="small"
+                                @click="cancelLeave(row.id)"
+                            >
+                                取消
+                            </el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -67,6 +75,7 @@ import request from "@/utils/request"
 import LeaveDetail from "./LeaveDetail.vue"
 import dayjs from "dayjs"
 import utc from "dayjs/plugin/utc"
+import { ElMessage, ElMessageBox } from "element-plus"
 
 dayjs.extend(utc)
 
@@ -113,7 +122,28 @@ export default {
                     return "未知状态"
             }
         }
-
+        // 取消请假
+        const cancelLeave = async (leaveId) => {
+            try {
+                await ElMessageBox.confirm(
+                    "确定要取消这条请假吗？",
+                    "提示",
+                    {
+                        confirmButtonText: "确定",
+                        cancelButtonText: "取消",
+                        type: "warning"
+                    }
+                )
+                await request.patch(`/cancel-leave/${leaveId}/`)
+                ElMessage.success("取消成功")
+                fetchLeaveRequests()
+            } catch (error) {
+                if (error !== 'cancel') {
+                    console.error("取消失败:", error)
+                    ElMessage.error("取消失败，请稍后重试")
+                }
+            }
+        }
         // 分页查询
         const fetchLeaveRequests = async () => {
             try {
@@ -157,6 +187,7 @@ export default {
             formatLeaveDate,
             formatStatus,
             viewLeaveDetail,
+            cancelLeave, 
             currentPage,
             pageSize,
             total,

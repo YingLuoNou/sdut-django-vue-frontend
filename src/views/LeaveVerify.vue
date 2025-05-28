@@ -26,12 +26,11 @@
                         <el-descriptions-item label="班级">
                             {{ data.student_class }}
                         </el-descriptions-item>
-                        <el-descriptions-item label="起止日期">
-                            {{ formatDate(data.start_date) }} —
-                            {{ formatDate(data.end_date) }}
+                        <el-descriptions-item label="请假开始时间">
+                            {{ formatDate(data.start_date) }}
                         </el-descriptions-item>
-                        <el-descriptions-item label="申请时间">
-                            {{ formatDateTime(data.leave_time) }}
+                        <el-descriptions-item label="请假结束时间">
+                            {{ formatDate(data.end_date) }}
                         </el-descriptions-item>
                         <el-descriptions-item label="理由">
                             {{ data.reason }}
@@ -62,16 +61,17 @@
     </el-card>
 </template>
 
-
-
 <script setup lang="ts">
 import { ref, onMounted } from "vue"
 import { useRoute } from "vue-router"
 import request from "@/utils/request"
+import dayjs from "dayjs"
+import utc from "dayjs/plugin/utc"
+dayjs.extend(utc)
 
 const route = useRoute()
-const rawUuid = route.params.uuid 
-const uuid = ref('')
+const rawUuid = route.params.uuid
+const uuid = ref("")
 
 const data = ref<any>(null)
 const loading = ref(true)
@@ -86,21 +86,20 @@ const statusMap: Record<number, string> = {
     5: "已审核"
 }
 
-function formatDate(val: string) {
-    return val.slice(0, 10)
+const formatDate = (utcStr: string) => {
+    const date = dayjs.utc(utcStr).local()
+    return date.format("YYYY-MM-DD HH:mm")
 }
-function formatDateTime(val: string) {
-    return val.replace("T", " ").slice(0, 19)
+const formatDateTime = (utcStr: string) => {
+    const date = dayjs.utc(utcStr).local()
+    return date.format("YYYY-MM-DD HH:mm:ss")
 }
 // 把 32 位连在一起的 uuid 转成标准带横杠的格式
 function formatUuid(s) {
-  // 如果已经带横杠，直接返回
-  if (s.includes('-')) return s
-  // 插入 8-4-4-4-12
-  return s.replace(
-    /^(.{8})(.{4})(.{4})(.{4})(.{12})$/,
-    '$1-$2-$3-$4-$5'
-  )
+    // 如果已经带横杠，直接返回
+    if (s.includes("-")) return s
+    // 插入 8-4-4-4-12
+    return s.replace(/^(.{8})(.{4})(.{4})(.{4})(.{12})$/, "$1-$2-$3-$4-$5")
 }
 
 onMounted(async () => {
