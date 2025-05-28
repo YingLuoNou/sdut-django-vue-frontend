@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router"
 import HomeView from "@/views/HomeView.vue"
-import LeaveVerify from '@/views/LeaveVerify.vue'
+import LeaveVerify from "@/views/LeaveVerify.vue"
 
 export const routes = [
     {
@@ -60,11 +60,11 @@ export const routes = [
         component: () => import("@/views/classmanage.vue")
     },
     {
-        path: '/leave/verify/:uuid',
-        name: 'LeaveVerify',
+        path: "/leave/verify/:uuid",
+        name: "LeaveVerify",
         component: LeaveVerify,
         props: true
-    },
+    }
 ]
 
 const router = createRouter({

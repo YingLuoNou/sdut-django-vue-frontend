@@ -16,7 +16,7 @@
                 <p><strong>当前状态：</strong>{{ formattedStatus }}</p>
             </div>
 
-                <div class="footer-info">
+            <div class="footer-info">
                 <!-- 左侧：防伪二维码 -->
                 <div class="qrcode-block">
                     <p class="qrcode-title">防伪二维码</p>
