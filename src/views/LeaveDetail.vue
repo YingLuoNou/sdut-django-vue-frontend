@@ -16,11 +16,13 @@
                 <p><strong>当前状态：</strong>{{ formattedStatus }}</p>
             </div>
 
-            <p>注：防伪二维码含有个人信息，请勿透漏给陌生人</p>
-            <p>
-                除维护等特殊情况外无防伪二维码或二维码无法扫描查询均视为假条无效
-            </p>
-
+            <div class="warning">
+                <p>注：防伪二维码含有个人信息，请勿透漏给陌生人</p>
+                <p>
+                    除维护等特殊情况外无防伪二维码或二维码无法扫描查询均视为假条无效
+                </p>
+            </div>
+            
             <div class="footer-info">
                 <!-- 左侧：防伪二维码 -->
                 <div class="qrcode-block">
@@ -254,6 +256,12 @@ export default {
     line-height: 1.5;
 }
 
+.warning{
+    margin-bottom: 20px;
+    font-size: 9px;
+    line-height: 1.1;
+}
+
 .footer-info {
     position: relative;
     min-height: 100px;
@@ -310,6 +318,7 @@ export default {
     margin-right: auto;
 }
 .qrcode-title {
+    font-size: 12px;
     font-weight: 500;
     margin-bottom: 5px;
 }
