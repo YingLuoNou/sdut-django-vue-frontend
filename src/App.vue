@@ -30,7 +30,7 @@
                     class="copyright"
                     :class="{ 'copyright-small': isStu || isTch || isMas }"
                 >
-                    ©copyright 2025 eh all rights reserved. Powered by
+                    © Copyright 2025 eh all rights reserved. Designed by
                     <a
                         href="https://github.com/zsyeh"
                         target="_blank"
