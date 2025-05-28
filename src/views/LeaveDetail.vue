@@ -22,7 +22,7 @@
                     除维护等特殊情况外无防伪二维码或二维码无法扫描查询均视为假条无效
                 </p>
             </div>
-            
+
             <div class="footer-info">
                 <!-- 左侧：防伪二维码 -->
                 <div class="qrcode-block">
@@ -256,7 +256,7 @@ export default {
     line-height: 1.5;
 }
 
-.warning{
+.warning {
     margin-bottom: 20px;
     font-size: 9px;
     line-height: 1.1;
