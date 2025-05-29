@@ -108,8 +108,8 @@ onMounted(async () => {
         const res = await request.get(`/leave/verify/${uuid.value}/`)
         data.value = res
     } catch (err: any) {
-        // 不管是 “不存在” 还是 “未批准”，后端都返回 400
-        if (err.response?.status === 400) {
+        // 不管是 “不存在” 还是 “未批准”，后端都返回 400 ，瞎输入uuid找不到返回404
+        if (err.response?.status === 400 || err.response?.status === 404) {
             error.value = "假条不存在或未批准"
         } else {
             error.value = "服务器错误，请稍后再试"
